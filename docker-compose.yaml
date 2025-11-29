@@ -10,7 +10,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/traefik.yml:ro
-      - traefik_letsencrypt:/letsencrypt
+      - ./letsencrypt:/letsencrypt
     environment:
       TZ: "Europe/Madrid"
     networks:
@@ -30,6 +30,3 @@ services:
 networks:
   proxy:
     external: true
-
-volumes:
-  traefik_letsencrypt:
