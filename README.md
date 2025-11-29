@@ -43,17 +43,7 @@ docker network create proxy
 git clone https://git.ictiberia.com/groales/traefik
 cd traefik
 
-# Crear carpeta y archivo para ACME
-mkdir -p letsencrypt
-# Windows PowerShell
-echo $null > .\letsencrypt\acme.json
-# Linux/macOS
-# touch ./letsencrypt/acme.json
-
-# Permisos (Linux)
-# chmod 600 ./letsencrypt/acme.json
-
-# Desplegar
+# Desplegar (se crea el volumen Docker 'traefik_letsencrypt')
 docker compose up -d
 ```
 
