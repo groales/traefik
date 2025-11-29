@@ -1,0 +1,32 @@
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
+      # - "8080:8080" # Dashboard (exponer solo si lo proteges)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/traefik.yml:ro
+      - ./letsencrypt:/letsencrypt
+    environment:
+      TZ: "Europe/Madrid"
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      # Dashboard seguro por dominio
+      - "traefik.http.routers.traefik.rule=Host(`traefik.tudominio.com`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.service=api@internal"
+      # Opcional: Autenticación básica
+      # - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      # - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$..."
+
+networks:
+  proxy:
+    external: true
