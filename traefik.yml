@@ -6,11 +6,8 @@ api:
 # Logs
 log:
   level: INFO  # DEBUG, INFO, WARN, ERROR
-  filePath: /var/log/traefik/traefik.log
 
-accessLog:
-  filePath: /var/log/traefik/access.log
-  bufferingSize: 100
+accessLog: {}
 
 # Puertos de escucha de Traefik y redirección automatica
 entryPoints:
