@@ -12,9 +12,10 @@ Traefik es un reverse proxy moderno y ligero que detecta servicios Docker autom�
 
 - 🔒 HTTPS automático con Let's Encrypt (HTTP-01)
 - 🧠 Descubrimiento automático de servicios Docker
-- 🧷 Redirección HTTP→HTTPS
+- 🧿 Redirección HTTP→HTTPS
 - 🧰 Dashboard web (seguro por dominio)
 - 🧩 Middlewares: auth básica, headers de seguridad, rate limit, etc.
+- 📊 Logs de acceso y errores (stdout/stderr)
 
 ## Requisitos
 
@@ -136,6 +137,23 @@ certificatesResolvers:
     acme:
       caServer: https://acme-staging-v02.api.letsencrypt.org/directory
 ```
+
+## Logs
+
+Traefik envía logs a stdout/stderr (sin persistencia en disco):
+
+```bash
+# Ver logs en tiempo real
+docker logs -f traefik
+
+# Filtrar errores
+docker logs traefik | Select-String -Pattern error
+
+# Ver logs de acceso
+docker logs traefik | Select-String -Pattern "GET|POST"
+```
+
+**Nivel de log**: INFO (configurable en `traefik.yml` → `log.level`)
 
 ## Troubleshooting
 

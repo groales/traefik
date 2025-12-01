@@ -4,9 +4,25 @@ Este directorio contiene configuración que Traefik recarga automáticamente sin
 
 ## Archivos
 
-- **config.yml**: Configuración dinámica completa (middlewares, routers, servicios)
+- **config.yml**: Configuración dinámica completa (serversTransports, middlewares, routers, servicios)
 
 **Importante:** Con `directory:` en el proveedor file, se debe usar un único archivo consolidado con la estructura `http:` como raíz.
+
+## ServersTransports
+
+El archivo incluye el transport `insecure` para servicios con certificados autofirmados (como Portainer):
+
+```yaml
+http:
+  serversTransports:
+    insecure:
+      insecureSkipVerify: true
+```
+
+**Uso en labels**:
+```yaml
+- "traefik.http.services.mi-servicio.loadbalancer.serversTransport=insecure@file"
+```
 
 ## Autenticación Básica
 
