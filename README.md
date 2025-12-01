@@ -37,34 +37,41 @@ Internet → Traefik (80/443) → Servicios (en red proxy)
 docker network create proxy
 ```
 
-### 2) Clonar y desplegar
+### 2) Clonar y configurar
 
 ```bash
 git clone https://git.ictiberia.com/groales/traefik
 cd traefik
 
-# Crear carpeta y archivo para ACME
+# Crear carpeta para ACME
 mkdir -p letsencrypt
-# Windows PowerShell
-echo $null > .\letsencrypt\acme.json
 # Linux/macOS
 # touch ./letsencrypt/acme.json
-
-# Permisos (Linux)
 # chmod 600 ./letsencrypt/acme.json
-
-# Desplegar
-docker compose up -d
 ```
 
-### 3) Configurar dominio y email
+### 3) Editar configuración
 
-Edita `traefik.yml` y ajusta:
-- `certificatesResolvers.letsencrypt.acme.email`
-- (Opcional) Cambia el dominio del dashboard en labels del contenedor (`traefik.tudominio.com`)
+**IMPORTANTE:** Antes de desplegar, edita los siguientes archivos con tus datos reales:
 
-Reinicia:
+**traefik.yml:**
+```yaml
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: tu-email@tudominio.com  # ← EDITA AQUÍ
+```
+
+**docker-compose.yaml:**
+```yaml
+labels:
+  - "traefik.http.routers.traefik.rule=Host(`traefik.tudominio.com`)"  # ← EDITA AQUÍ
+```
+
+### 4) Desplegar
+
 ```bash
+docker network create proxy  # Si no existe
 docker compose up -d
 ```
 
