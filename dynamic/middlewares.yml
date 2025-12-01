@@ -1,0 +1,43 @@
+http:
+  middlewares:
+    # Headers de seguridad
+    security-headers:
+      headers:
+        stsSeconds: 63072000
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        customResponseHeaders:
+          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+
+    # Rate limiting
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 200
+        period: 1m
+
+    # IP Whitelist (ejemplo - ajusta tus IPs)
+    ip-whitelist:
+      ipWhiteList:
+        sourceRange:
+          - "127.0.0.1/32"
+          - "10.0.0.0/8"
+          - "192.168.0.0/16"
+
+    # Autenticación básica (genera hash con: htpasswd -nb usuario password)
+    # auth-basic:
+    #   basicAuth:
+    #     users:
+    #       - "admin:$apr1$..."
+
+    # Redirect www a root
+    redirect-www:
+      redirectRegex:
+        regex: "^https?://www\\.(.+)"
+        replacement: "https://${1}"
+        permanent: true

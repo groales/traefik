@@ -11,6 +11,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/traefik.yml:ro
       - ./letsencrypt:/letsencrypt
+      - ./dynamic:/etc/traefik/dynamic:ro
     environment:
       TZ: "Europe/Madrid"
     networks:
