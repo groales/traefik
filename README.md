@@ -45,7 +45,6 @@ cd traefik
 
 # Crear carpeta para ACME
 mkdir -p letsencrypt
-Linux/macOS
 touch ./letsencrypt/acme.json
 chmod 600 ./letsencrypt/acme.json
 ```
