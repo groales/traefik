@@ -1,7 +1,8 @@
+# Traefik Dashboard
 api:
   dashboard: true
   insecure: false
-
+# Puertos de escucha de Traefik y redirección automatica
 entryPoints:
   web:
     address: ":80"
@@ -21,7 +22,7 @@ providers:
   file:
     directory: /etc/traefik/dynamic
     watch: true
-
+# Certificates from an ACME server
 certificatesResolvers:
   letsencrypt:
     acme:
