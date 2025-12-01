@@ -21,9 +21,9 @@ http:
         burst: 200
         period: 1m
 
-    # IP Whitelist (ejemplo - ajusta tus IPs)
-    ip-whitelist:
-      ipWhiteList:
+    # IP Allow List (ejemplo - ajusta tus IPs)
+    ip-allowlist:
+      ipAllowList:
         sourceRange:
           - "127.0.0.1/32"
           - "10.0.0.0/8"
