@@ -11,6 +11,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/traefik.yml:ro
       - ./letsencrypt:/letsencrypt
+    env_file:
+      - .env
     environment:
       TZ: "Europe/Madrid"
     networks:
