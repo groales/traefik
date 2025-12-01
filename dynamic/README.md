@@ -6,6 +6,29 @@ Este directorio contiene configuración que Traefik recarga automáticamente sin
 
 - **middlewares.yml**: Middlewares reutilizables (headers seguridad, rate limit, auth, etc.)
 
+## Autenticación Básica
+
+El middleware `auth-basic` está **habilitado por defecto** para proteger el dashboard de Traefik.
+
+### Configurar tu contraseña
+
+1. Genera hash bcrypt:
+```bash
+docker run --rm httpd:alpine htpasswd -nbB admin tu_password
+```
+
+2. Copia el hash completo (después de `admin:`)
+
+3. Edita `middlewares.yml` línea 35:
+```yaml
+auth-basic:
+  basicAuth:
+    users:
+      - "admin:$2y$05$HASH_GENERADO_AQUI"
+```
+
+4. Guarda → recarga automática en ~10 segundos
+
 ## Uso
 
 ### Aplicar middleware a un servicio

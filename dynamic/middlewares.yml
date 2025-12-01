@@ -29,11 +29,11 @@ http:
           - "10.0.0.0/8"
           - "192.168.0.0/16"
 
-    # Autenticación básica (genera hash con: htpasswd -nb usuario password)
-    # auth-basic:
-    #   basicAuth:
-    #     users:
-    #       - "admin:$apr1$..."
+    # Autenticación básica (genera hash con: docker run --rm httpd:alpine htpasswd -nbB admin tu_password)
+    auth-basic:
+      basicAuth:
+        users:
+          - "admin:$2y$05$example_hash_CHANGE_THIS"  # CAMBIA ESTE HASH
 
     # Redirect www a root
     redirect-www:

@@ -78,22 +78,26 @@ docker compose up -d
 
 Este stack expone el dashboard por dominio usando TLS y el servicio interno `api@internal`.
 
-Para proteger con autenticación básica (opcional):
+**Autenticación básica habilitada:** El dashboard está protegido mediante el middleware `auth-basic@file` definido en `dynamic/middlewares.yml`.
 
-```yaml
-labels:
-  - "traefik.http.routers.traefik.middlewares=traefik-auth"
-  - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$<hash>"
-```
+### Configurar contraseña
 
-Generar hash (htpasswd):
+1. Genera el hash bcrypt:
 ```bash
-# Linux/macOS
-htpasswd -nb admin 'TuPassword'
-
-# PowerShell con OpenSSL (alternativa)
-# openssl passwd -apr1 TuPassword
+docker run --rm httpd:alpine htpasswd -nbB admin tu_password_segura
 ```
+
+2. Edita `dynamic/middlewares.yml` línea 35 y reemplaza el hash de ejemplo:
+```yaml
+auth-basic:
+  basicAuth:
+    users:
+      - "admin:$2y$05$tu_hash_generado_aqui"
+```
+
+3. Guarda el archivo. Traefik recargará automáticamente en ~10 segundos (no requiere reinicio).
+
+**Usuario por defecto:** `admin` (cambia el hash según tu contraseña)
 
 ## Exponer Servicios Detrás de Traefik
 

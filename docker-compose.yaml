@@ -24,9 +24,8 @@ services:
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.service=api@internal"
-      # Opcional: Autenticación básica
-      # - "traefik.http.routers.traefik.middlewares=traefik-auth"
-      # - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$..."
+      # Autenticación básica (usa middleware del archivo dynamic/middlewares.yml)
+      - "traefik.http.routers.traefik.middlewares=auth-basic@file"
 
 networks:
   proxy:
