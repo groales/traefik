@@ -5,7 +5,10 @@ Este directorio contiene configuración que Traefik recarga automáticamente sin
 ## Archivos
 
 - **middlewares.yml**: Middlewares reutilizables (headers seguridad, rate limit, auth, etc.)
-- **routers.yml**: Ejemplos de routers y servicios estáticos (alternativa a labels Docker)
+- **routers.yml**: Routers HTTP/HTTPS (ejemplos comentados)
+- **services.yml**: Servicios backend (ejemplos comentados)
+
+**Nota:** Los archivos NO usan la raíz `http:` porque Traefik los carga automáticamente bajo `http.middlewares`, `http.routers`, y `http.services` respectivamente.
 
 ## Autenticación Básica
 
