@@ -21,7 +21,7 @@ docker run --rm httpd:alpine htpasswd -nbB admin tu_password
 
 2. Copia el hash completo (después de `admin:`)
 
-3. Edita `middlewares.yml` línea 35:
+3. Edita `config.yml` (sección http > middlewares > auth-basic):
 ```yaml
 auth-basic:
   basicAuth:
@@ -63,5 +63,5 @@ Traefik detecta cambios en este directorio y recarga sin reiniciar. Espera ~10 s
 
 ## Ejemplos adicionales
 
-- **Routers y Servicios:** Ver ejemplos comentados en `routers.yml` para configurar rutas sin labels Docker
+- **Routers y Servicios:** Ver ejemplos comentados en `config.yml` (secciones routers y services) para configurar rutas sin labels Docker
 - **Middlewares avanzados:** Consulta la wiki: https://git.ictiberia.com/groales/traefik/wiki/Middlewares-Seguridad

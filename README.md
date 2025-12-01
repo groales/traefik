@@ -78,7 +78,7 @@ docker compose up -d
 
 Este stack expone el dashboard por dominio usando TLS y el servicio interno `api@internal`.
 
-**Autenticación básica habilitada:** El dashboard está protegido mediante el middleware `auth-basic@file` definido en `dynamic/middlewares.yml`.
+**Autenticación básica habilitada:** El dashboard está protegido mediante el middleware `auth-basic@file` definido en `dynamic/config.yml`.
 
 ### Configurar contraseña
 
@@ -87,7 +87,7 @@ Este stack expone el dashboard por dominio usando TLS y el servicio interno `api
 docker run --rm httpd:alpine htpasswd -nbB admin tu_password_segura
 ```
 
-2. Edita `dynamic/middlewares.yml` línea 35 y reemplaza el hash de ejemplo:
+2. Edita `dynamic/config.yml` (sección middlewares > auth-basic) y reemplaza el hash de ejemplo:
 ```yaml
 auth-basic:
   basicAuth:
