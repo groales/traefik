@@ -6,6 +6,14 @@
 
 http:
   # ============================================
+  # SERVERS TRANSPORTS
+  # ============================================
+  serversTransports:
+    # Transport para servicios con certificados autofirmados
+    insecure:
+      insecureSkipVerify: true
+
+  # ============================================
   # MIDDLEWARES
   # ============================================
   middlewares:
