@@ -1,29 +1,26 @@
-# ============================================
-# ROUTERS Y SERVICIOS (Ejemplos comentados)
-# ============================================
-# Descomentar y adaptar según necesites
+http:
+  routers:
+    # Ejemplo: Router para aplicación web con HTTPS y middlewares
+    # whoami:
+    #   rule: "Host(`whoami.tudominio.com`)"
+    #   entryPoints:
+    #     - websecure
+    #   middlewares:
+    #     - security-headers
+    #     - rate-limit
+    #   service: whoami-service
+    #   tls:
+    #     certResolver: letsencrypt
 
-# Ejemplo: Router para aplicación web con HTTPS y middlewares
-# whoami:
-#   rule: "Host(`whoami.tudominio.com`)"
-#   entryPoints:
-#     - websecure
-#   middlewares:
-#     - security-headers
-#     - rate-limit
-#   service: whoami-service
-#   tls:
-#     certResolver: letsencrypt
-
-# Ejemplo: Router con autenticación básica y restricción IP
-# admin-panel:
-#   rule: "Host(`admin.tudominio.com`)"
-#   entryPoints:
-#     - websecure
-#   middlewares:
-#     - auth-basic
-#     - ip-allowlist
-#     - security-headers
-#   service: admin-service
-#   tls:
-#     certResolver: letsencrypt
+    # Ejemplo: Router con autenticación básica y restricción IP
+    # admin-panel:
+    #   rule: "Host(`admin.tudominio.com`)"
+    #   entryPoints:
+    #     - websecure
+    #   middlewares:
+    #     - auth-basic
+    #     - ip-allowlist
+    #     - security-headers
+    #   service: admin-service
+    #   tls:
+    #     certResolver: letsencrypt

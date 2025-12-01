@@ -1,46 +1,44 @@
-# ============================================
-# MIDDLEWARES
-# ============================================
+http:
+  middlewares:
+    # Headers de seguridad
+    security-headers:
+      headers:
+        stsSeconds: 63072000
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        customResponseHeaders:
+          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
 
-# Headers de seguridad
-security-headers:
-  headers:
-    stsSeconds: 63072000
-    forceSTSHeader: true
-    stsIncludeSubdomains: true
-    stsPreload: true
-    frameDeny: true
-    contentTypeNosniff: true
-    browserXssFilter: true
-    referrerPolicy: "strict-origin-when-cross-origin"
-    customResponseHeaders:
-      X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+    # Rate limiting
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 200
+        period: 1m
 
-# Rate limiting
-rate-limit:
-  rateLimit:
-    average: 100
-    burst: 200
-    period: 1m
+    # IP Allow List (ejemplo - ajusta tus IPs)
+    ip-allowlist:
+      ipAllowList:
+        sourceRange:
+          - "127.0.0.1/32"
+          - "10.0.0.0/8"
+          - "172.16.0.0/12"
+          - "192.168.0.0/16"
 
-# IP Allow List (ejemplo - ajusta tus IPs)
-ip-allowlist:
-  ipAllowList:
-    sourceRange:
-      - "127.0.0.1/32"
-      - "10.0.0.0/8"
-      - "172.16.0.0/12"
-      - "192.168.0.0/16"
+    # Autenticación básica (genera hash con: docker run --rm httpd:alpine htpasswd -nbB admin tu_password)
+    auth-basic:
+      basicAuth:
+        users:
+          - "admin:$2y$05$example_hash_CHANGE_THIS"  # CAMBIA ESTE HASH
 
-# Autenticación básica (genera hash con: docker run --rm httpd:alpine htpasswd -nbB admin tu_password)
-auth-basic:
-  basicAuth:
-    users:
-      - "admin:$2y$05$example_hash_CHANGE_THIS"  # CAMBIA ESTE HASH
-
-# Redirect www a root
-redirect-www:
-  redirectRegex:
-    regex: "^https?://www\\.(.+)"
-    replacement: "https://${1}"
-    permanent: true
+    # Redirect www a root
+    redirect-www:
+      redirectRegex:
+        regex: "^https?://www\\.(.+)"
+        replacement: "https://${1}"
+        permanent: true

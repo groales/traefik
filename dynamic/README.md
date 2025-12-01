@@ -8,7 +8,7 @@ Este directorio contiene configuración que Traefik recarga automáticamente sin
 - **routers.yml**: Routers HTTP/HTTPS (ejemplos comentados)
 - **services.yml**: Servicios backend (ejemplos comentados)
 
-**Nota:** Los archivos NO usan la raíz `http:` porque Traefik los carga automáticamente bajo `http.middlewares`, `http.routers`, y `http.services` respectivamente.
+**Importante:** Cada archivo debe tener la estructura `http:` como raíz cuando se usa `directory:` en el proveedor file.
 
 ## Autenticación Básica
 
