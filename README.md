@@ -1,6 +1,6 @@
 # Infraestructura: Traefik
 
-# Traefik v2 — Reverse Proxy con Let's Encrypt
+# Traefik — Reverse Proxy con Let's Encrypt
 
 Este repositorio despliega **Traefik** como proxy inverso con HTTPS automático (Let's Encrypt), listo para servir como puerta de entrada a tus servicios Docker mediante la red compartida `proxy`.
 
@@ -45,9 +45,9 @@ cd traefik
 
 # Crear carpeta para ACME
 mkdir -p letsencrypt
-# Linux/macOS
-# touch ./letsencrypt/acme.json
-# chmod 600 ./letsencrypt/acme.json
+Linux/macOS
+touch ./letsencrypt/acme.json
+chmod 600 ./letsencrypt/acme.json
 ```
 
 ### 3) Editar configuración
