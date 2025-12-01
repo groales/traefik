@@ -2,6 +2,16 @@
 api:
   dashboard: true
   insecure: false
+
+# Logs
+log:
+  level: INFO  # DEBUG, INFO, WARN, ERROR
+  filePath: /var/log/traefik/traefik.log
+
+accessLog:
+  filePath: /var/log/traefik/access.log
+  bufferingSize: 100
+
 # Puertos de escucha de Traefik y redirección automatica
 entryPoints:
   web:

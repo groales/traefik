@@ -12,6 +12,7 @@ services:
       - ./traefik.yml:/traefik.yml:ro
       - ./letsencrypt:/letsencrypt
       - ./dynamic:/etc/traefik/dynamic:ro
+      - ./logs:/var/log/traefik
     environment:
       TZ: "Europe/Madrid"
     networks:
