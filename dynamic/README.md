@@ -5,6 +5,7 @@ Este directorio contiene configuración que Traefik recarga automáticamente sin
 ## Archivos
 
 - **middlewares.yml**: Middlewares reutilizables (headers seguridad, rate limit, auth, etc.)
+- **routers.yml**: Ejemplos de routers y servicios configurados por archivo (alternativa a labels Docker)
 
 ## Autenticación Básica
 
@@ -61,4 +62,5 @@ Traefik detecta cambios en este directorio y recarga sin reiniciar. Espera ~10 s
 
 ## Ejemplos adicionales
 
-Consulta la wiki: https://git.ictiberia.com/groales/traefik/wiki/Middlewares-Seguridad
+- **Routers y Servicios:** Ver ejemplos comentados en `routers.yml` para configurar rutas sin labels Docker
+- **Middlewares avanzados:** Consulta la wiki: https://git.ictiberia.com/groales/traefik/wiki/Middlewares-Seguridad
