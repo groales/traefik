@@ -70,7 +70,7 @@ services:
 
 Puedes combinar varios:
 ```yaml
-- "traefik.http.routers.app.middlewares=security-headers@file,rate-limit@file,ip-whitelist@file"
+- "traefik.http.routers.app.middlewares=security-headers@file,rate-limit@file,ip-allowlist@file"
 ```
 
 ## Recarga automática
