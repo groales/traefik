@@ -32,13 +32,7 @@ Internet → Traefik (80/443) → Servicios (en red proxy)
 
 ## Despliegue
 
-### 1) Crear red `proxy`
-
-```bash
-docker network create proxy
-```
-
-### 2) Clonar y configurar
+### 1) Clonar y configurar
 
 ```bash
 git clone https://git.ictiberia.com/groales/traefik
@@ -50,7 +44,7 @@ touch ./letsencrypt/acme.json
 chmod 600 ./letsencrypt/acme.json
 ```
 
-### 3) Editar configuración
+### 2) Editar configuración
 
 **IMPORTANTE:** Antes de desplegar, edita los siguientes archivos con tus datos reales:
 
@@ -68,10 +62,9 @@ labels:
   - "traefik.http.routers.traefik.rule=Host(`traefik.tudominio.com`)"  # ← EDITA AQUÍ
 ```
 
-### 4) Desplegar
+### 3) Desplegar
 
 ```bash
-docker network create proxy  # Si no existe
 docker compose up -d
 ```
 
