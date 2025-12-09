@@ -21,7 +21,6 @@ services:
       # Dashboard seguro por dominio
       - "traefik.http.routers.traefik.rule=Host(`traefik.tudominio.com`)"  # EDITA CON TU DOMINIO
       - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.service=api@internal"
       # Autenticación básica (usa middleware del archivo dynamic/config.yml)
