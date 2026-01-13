@@ -14,8 +14,6 @@ services:
       - ./dynamic:/etc/traefik/dynamic:ro
     environment:
       TZ: "Europe/Madrid"
-    networks:
-      - proxy
     labels:
       - "traefik.enable=true"
       # Dashboard seguro por dominio
@@ -27,6 +25,6 @@ services:
       - "traefik.http.routers.traefik.middlewares=auth-basic@file"
 
 networks:
-  proxy:
+  default:
+    external: true
     name: proxy
-    driver: bridge
