@@ -51,7 +51,7 @@ auth-basic:
 
 ### Aplicar middleware a un servicio
 
-En el `docker-compose.yml` de tu servicio:
+En el `compose.yaml` de tu servicio:
 
 ```yaml
 services:

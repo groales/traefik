@@ -56,7 +56,7 @@ certificatesResolvers:
       email: tu-email@tudominio.com  # ← EDITA AQUÍ
 ```
 
-**docker-compose.yml:**
+**compose.yaml:**
 ```yaml
 labels:
   - "traefik.http.routers.traefik.rule=Host(`traefik.tudominio.com`)"  # ← EDITA AQUÍ
