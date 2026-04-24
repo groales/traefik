@@ -8,7 +8,6 @@
 
 ## ServersTransports
 
-El archivo incluye el transport `insecure` para servicios con certificados autofirmados (como Portainer):
 
 ```yaml
 http:

@@ -83,12 +83,9 @@ auth-basic:
 **Usuario por defecto:** `admin` (cambia el hash según tu contraseña)
 
 
-Conecta tus servicios a la red `proxy` y añade labels. Ejemplo: Portainer
 
 ```yaml
 services:
-  portainer:
-    image: portainer/portainer-ce:lts
     networks:
       - proxy
     labels:
