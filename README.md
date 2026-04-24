@@ -1,12 +1,7 @@
-# Infraestructura: Traefik
 
-# Traefik — Reverse Proxy con Let's Encrypt
 
-Este repositorio despliega **Traefik** como proxy inverso con HTTPS automático (Let's Encrypt), listo para servir como puerta de entrada a tus servicios Docker mediante la red compartida `proxy`.
 
-## ¿Qué es Traefik?
 
-Traefik es un reverse proxy moderno y ligero que detecta servicios Docker automáticamente y los expone vía HTTP/HTTPS con reglas declarativas (labels) y certificados TLS automáticos con Let's Encrypt.
 
 ## Características
 
@@ -27,7 +22,6 @@ Traefik es un reverse proxy moderno y ligero que detecta servicios Docker autom�
 ## Arquitectura
 
 ```
-Internet → Traefik (80/443) → Servicios (en red proxy)
 ```
 
 ## Despliegue
@@ -35,8 +29,6 @@ Internet → Traefik (80/443) → Servicios (en red proxy)
 ### 1) Clonar y configurar
 
 ```bash
-git clone https://git.ictiberia.com/groales/traefik
-cd traefik
 
 # Crear carpeta para ACME
 mkdir -p letsencrypt
@@ -48,7 +40,6 @@ chmod 600 ./letsencrypt/acme.json
 
 **IMPORTANTE:** Antes de desplegar, edita los siguientes archivos con tus datos reales:
 
-**traefik.yml:**
 ```yaml
 certificatesResolvers:
   letsencrypt:
@@ -59,7 +50,6 @@ certificatesResolvers:
 **compose.yaml:**
 ```yaml
 labels:
-  - "traefik.http.routers.traefik.rule=Host(`traefik.tudominio.com`)"  # ← EDITA AQUÍ
 ```
 
 ### 3) Desplegar
@@ -89,11 +79,9 @@ auth-basic:
       - "admin:$2y$05$tu_hash_generado_aqui"
 ```
 
-3. Guarda el archivo. Traefik recargará automáticamente en ~10 segundos (no requiere reinicio).
 
 **Usuario por defecto:** `admin` (cambia el hash según tu contraseña)
 
-## Exponer Servicios Detrás de Traefik
 
 Conecta tus servicios a la red `proxy` y añade labels. Ejemplo: Portainer
 
@@ -104,12 +92,6 @@ services:
     networks:
       - proxy
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.tudominio.com`)"
-      - "traefik.http.routers.portainer.entrypoints=websecure"
-      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9443"
-      - "traefik.http.services.portainer.loadbalancer.server.scheme=https"
 
 networks:
   proxy:
@@ -118,8 +100,6 @@ networks:
 
 ## Buenas Prácticas
 
-- Usa `exposedByDefault=false` (ya configurado) y habilita servicios con `traefik.enable=true`
-- No expongas puertos directos (`ports:`) si accedes vía Traefik
 - Protege el dashboard con dominio + auth o restringe por IP
 - Usa Let's Encrypt staging para pruebas intensivas:
 
@@ -132,36 +112,27 @@ certificatesResolvers:
 
 ## Logs
 
-Traefik envía logs a stdout/stderr (sin persistencia en disco):
 
 ```bash
 # Ver logs en tiempo real
-docker logs -f traefik
 
 # Filtrar errores
-docker logs traefik | Select-String -Pattern error
 
 # Ver logs de acceso
-docker logs traefik | Select-String -Pattern "GET|POST"
 ```
 
-**Nivel de log**: INFO (configurable en `traefik.yml` → `log.level`)
 
 ## Troubleshooting
 
 - Certificado no se emite:
   - Verifica DNS y apertura del puerto 80
-  - Revisa logs: `docker logs traefik | Select-String -Pattern cert,acme,error`
 - 404 en servicio:
-  - Revisa labels y que el contenedor tenga `traefik.enable=true`
   - Verifica que el servicio está en la red `proxy`
 - Dashboard no carga:
   - Asegura que el dominio apunta al servidor
-  - Verifica las labels del router `traefik`
 
 ## Documentación adicional
 
-Consulta la **Wiki**: https://git.ictiberia.com/groales/traefik/wiki
 
 - Configuración avanzada (middlewares, serversTransport, mTLS)
 - Ejemplos por servicio (Jellyfin, Nextcloud, Vaultwarden)

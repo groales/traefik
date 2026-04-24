@@ -1,6 +1,4 @@
-# Configuración Dinámica de Traefik
 
-Este directorio contiene configuración que Traefik recarga automáticamente sin reiniciar el contenedor.
 
 ## Archivos
 
@@ -21,12 +19,10 @@ http:
 
 **Uso en labels**:
 ```yaml
-- "traefik.http.services.mi-servicio.loadbalancer.serversTransport=insecure@file"
 ```
 
 ## Autenticación Básica
 
-El middleware `auth-basic` está **habilitado por defecto** para proteger el dashboard de Traefik.
 
 ### Configurar tu contraseña
 
@@ -57,11 +53,6 @@ En el `compose.yaml` de tu servicio:
 services:
   mi-servicio:
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.mi-servicio.rule=Host(`app.tudominio.com`)"
-      - "traefik.http.routers.mi-servicio.entrypoints=websecure"
-      - "traefik.http.routers.mi-servicio.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.mi-servicio.middlewares=security-headers@file,rate-limit@file"
 ```
 
 **Nota:** El sufijo `@file` indica que el middleware viene de configuración dinámica.
@@ -70,14 +61,11 @@ services:
 
 Puedes combinar varios:
 ```yaml
-- "traefik.http.routers.app.middlewares=security-headers@file,rate-limit@file,ip-allowlist@file"
 ```
 
 ## Recarga automática
 
-Traefik detecta cambios en este directorio y recarga sin reiniciar. Espera ~10 segundos tras editar.
 
 ## Ejemplos adicionales
 
 - **Routers y Servicios:** Ver ejemplos comentados en `config.yml` (secciones routers y services) para configurar rutas sin labels Docker
-- **Middlewares avanzados:** Consulta la wiki: https://git.ictiberia.com/groales/traefik/wiki/Middlewares-Seguridad
