@@ -1,140 +1,162 @@
 
+# Traefik
 
+Reverse proxy moderno para exponer servicios Docker con HTTPS automático y enrutado por dominio.
 
-
+Referencia oficial de instalación: https://doc.traefik.io/traefik/
 
 ## Características
 
-- 🔒 HTTPS automático con Let's Encrypt (HTTP-01)
-- 🧠 Descubrimiento automático de servicios Docker
-- 🧿 Redirección HTTP→HTTPS
-- 🧰 Dashboard web (seguro por dominio)
-- 🧩 Middlewares: auth básica, headers de seguridad, rate limit, etc.
-- 📊 Logs de acceso y errores (stdout/stderr)
+- HTTPS automático con Let's Encrypt (HTTP-01).
+- Descubrimiento automático de servicios Docker.
+- Redirección HTTP -> HTTPS.
+- Dashboard protegido por dominio y autenticación básica.
+- Middlewares de seguridad, rate-limit e IP allow list.
 
-## Requisitos
+## Requisitos Previos
 
-- Docker + Docker Compose
-- Red Docker externa `proxy`
-- Dominio apuntando al servidor (para dashboard y certificados)
-- Puertos 80 y 443 accesibles desde Internet
+- Docker Engine instalado.
+- Docker Compose instalado.
+- Red Docker externa `proxy` creada.
+- Dominio apuntando al servidor para certificados y dashboard.
+- Puertos 80 y 443 accesibles desde Internet.
 
-## Arquitectura
+## Archivos de este Repositorio
 
-```
-```
+- `compose.yaml` - Servicio Traefik.
+- `traefik.yml` - Configuración estática.
+- `dynamic/config.yml` - Configuración dinámica y middlewares.
+- `README.md` - Esta documentación.
 
-## Despliegue
+---
 
-### 1) Clonar y configurar
+## Despliegue con Docker Compose
+
+### 1. Clonar el repositorio
 
 ```bash
+git clone https://github.com/groales/traefik.git
+cd traefik
+```
 
-# Crear carpeta para ACME
+### 2. Preparar almacenamiento ACME
+
+```bash
 mkdir -p letsencrypt
 touch ./letsencrypt/acme.json
 chmod 600 ./letsencrypt/acme.json
 ```
 
-### 2) Editar configuración
+### 3. Revisar configuración
 
-**IMPORTANTE:** Antes de desplegar, edita los siguientes archivos con tus datos reales:
+- En `traefik.yml`, ajusta email ACME:
 
 ```yaml
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: tu-email@tudominio.com  # ← EDITA AQUÍ
+      email: admin@tudominio.com
 ```
 
-**compose.yaml:**
+- En `compose.yaml`, ajusta dominio del dashboard:
+
 ```yaml
-labels:
+- "traefik.http.routers.traefik.rule=Host(`traefik.tudominio.com`)"
 ```
 
-### 3) Desplegar
+- En `dynamic/config.yml`, cambia el hash de `auth-basic`.
+
+### 4. Levantar servicio
 
 ```bash
+docker network create proxy
 docker compose up -d
 ```
 
-## Dashboard Seguro
+---
 
-Este stack expone el dashboard por dominio usando TLS y el servicio interno `api@internal`.
+## Método Alternativo: Despliegue Manual
 
-**Autenticación básica habilitada:** El dashboard está protegido mediante el middleware `auth-basic@file` definido en `dynamic/config.yml`.
-
-### Configurar contraseña
-
-1. Genera el hash bcrypt:
-```bash
-docker run --rm httpd:alpine htpasswd -nbB admin tu_password_segura
-```
-
-2. Edita `dynamic/config.yml` (sección middlewares > auth-basic) y reemplaza el hash de ejemplo:
-```yaml
-auth-basic:
-  basicAuth:
-    users:
-      - "admin:$2y$05$tu_hash_generado_aqui"
-```
-
-
-**Usuario por defecto:** `admin` (cambia el hash según tu contraseña)
-
-
-
-```yaml
-services:
-    networks:
-      - proxy
-    labels:
-
-networks:
-  proxy:
-    external: true
-```
-
-## Buenas Prácticas
-
-- Protege el dashboard con dominio + auth o restringe por IP
-- Usa Let's Encrypt staging para pruebas intensivas:
-
-```yaml
-certificatesResolvers:
-  letsencrypt:
-    acme:
-      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
-```
-
-## Logs
-
-
-```bash
-# Ver logs en tiempo real
-
-# Filtrar errores
-
-# Ver logs de acceso
-```
-
-
-## Troubleshooting
-
-- Certificado no se emite:
-  - Verifica DNS y apertura del puerto 80
-- 404 en servicio:
-  - Verifica que el servicio está en la red `proxy`
-- Dashboard no carga:
-  - Asegura que el dominio apunta al servidor
-
-## Documentación adicional
-
-
-- Configuración avanzada (middlewares, serversTransport, mTLS)
-- Ejemplos por servicio (Jellyfin, Nextcloud, Vaultwarden)
-- Seguridad (headers, rate limiting, IP whitelist)
+Puedes usar Docker CLI replicando volúmenes, puertos y labels del `compose.yaml`.
 
 ---
 
-**Última actualización**: Noviembre 2025
+## Acceso Inicial
+
+- Dashboard: `https://traefik.tudominio.com`.
+- El dashboard usa `api@internal` y middleware `auth-basic@file`.
+
+## Comandos Útiles
+
+```bash
+docker compose logs -f traefik
+docker compose restart traefik
+docker compose pull
+docker compose up -d
+docker compose down
+```
+
+## Estructura de Volúmenes
+
+```text
+Bind mounts:
+├── /var/run/docker.sock -> /var/run/docker.sock:ro
+├── ./traefik.yml -> /traefik.yml:ro
+├── ./dynamic -> /etc/traefik/dynamic:ro
+└── ./letsencrypt -> /letsencrypt
+```
+
+## Configuración Avanzada
+
+- `dynamic/config.yml` incluye middlewares:
+  - `security-headers`
+  - `rate-limit`
+  - `ip-allowlist`
+  - `auth-basic`
+- Puedes añadir routers y servicios dinámicos en el mismo archivo.
+- Para pruebas ACME intensivas, usa servidor staging.
+
+## Solución de Problemas
+
+- Certificado no se emite:
+  - Verifica DNS y puerto 80 abierto.
+- 404 en servicio:
+  - Verifica labels y red `proxy` del contenedor destino.
+- Dashboard no carga:
+  - Verifica regla Host y certificado.
+
+## Seguridad
+
+- Mantén dashboard protegido con auth y/o allow-list.
+- No expongas `:8080` sin protección adicional.
+- Revisa headers de seguridad y rate-limit en producción.
+
+## Backup y Restauración
+
+```bash
+# Backup básico
+tar -czf traefik-backup-$(date +%Y%m%d).tar.gz ./traefik.yml ./dynamic ./letsencrypt
+
+# Restauración
+docker compose down
+tar -xzf traefik-backup-YYYYMMDD.tar.gz
+docker compose up -d
+```
+
+## Actualización
+
+```bash
+docker compose pull
+docker compose up -d
+docker compose logs -f traefik
+```
+
+## Recursos
+
+- Documentación oficial Traefik: https://doc.traefik.io/traefik/
+- Referencia Docker provider: https://doc.traefik.io/traefik/providers/docker/
+- Referencia ACME: https://doc.traefik.io/traefik/https/acme/
+
+## Licencia
+
+Este repositorio de configuración es de uso libre. Revisa la licencia del proyecto original en su repositorio oficial.
