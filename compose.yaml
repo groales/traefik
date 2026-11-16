@@ -1,22 +1,74 @@
 services:
   traefik:
-    image: ${TRAEFIK_IMAGE:-traefik:latest}
+    image: traefik:latest
+    container_name: traefik
     restart: unless-stopped
-    environment:
-      TRAEFIK_LOG_LEVEL: ${TRAEFIK_LOG_LEVEL:-INFO}
-    command:
-      - --api.insecure=true
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --providers.file.directory=/etc/traefik/dynamic
-      - --providers.file.watch=true
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --log.level=${TRAEFIK_LOG_LEVEL:-INFO}
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+     # Conecta el contenedor a la red 'proxy'
+      - proxy
+
     ports:
-      - "${TRAEFIK_BIND_ADDRESS:-127.0.0.1}:${TRAEFIK_HTTP_PORT:-80}:80"
-      - "${TRAEFIK_BIND_ADDRESS:-127.0.0.1}:${TRAEFIK_HTTPS_PORT:-443}:443"
-      - "${TRAEFIK_BIND_ADDRESS:-127.0.0.1}:${TRAEFIK_DASHBOARD_PORT:-8080}:8080"
+      - "80:80"
+      - "443:443"
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config/dynamic:/etc/traefik/dynamic:ro
+      - ./certs:/certs:ro
+      - ./dynamic:/dynamic:ro
+
+    command:
+      # EntryPoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=true"
+
+      # Attach the static configuration tls.yaml file that contains the tls configuration settings
+      - "--providers.file.filename=/dynamic/tls.yaml"
+
+      # Providers 
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=proxy"
+
+      # API & Dashboard 
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+
+      # Observability 
+      - "--log.level=INFO"
+      - "--accesslog=true"
+      - "--metrics.prometheus=true"
+
+  # Traefik Dynamic configuration via Docker labels
+    labels:
+      # Enable self‑routing
+      - "traefik.enable=true"
+
+      # Dashboard router
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.docker.localhost`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+
+# Whoami application
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls=true"
+
+networks:
+  proxy:
+    name: proxy

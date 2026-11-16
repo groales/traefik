@@ -1,4 +1,7 @@
 .env
 .DS_Store
-config/acme.json
-data/
+
+# Configuración y certificados locales (se crean en cada equipo)
+/certs/
+/dynamic/
+**/acme.json
