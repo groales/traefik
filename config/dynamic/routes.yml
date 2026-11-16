@@ -1,2 +1,2 @@
 # Añade aquí routers, middlewares y servicios dinámicos de Traefik.
-http: {}
+# Mantén el archivo sin secciones vacías hasta definir una ruta.
