@@ -4,4 +4,4 @@
 # Configuración y certificados locales (se crean en cada equipo)
 /certs/
 /dynamic/
-**/acme.json
+/letsencrypt/
