@@ -37,7 +37,7 @@ cd traefik
 O prepara manualmente una carpeta con `compose.yaml`. En ambos casos, desde el directorio del proyecto, crea el certificado y la configuración local:
 
 ```bash
-mkdir -p certs dynamic
+mkdir -p certs dynamic letsencrypt
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout certs/local.key -out certs/local.crt \
   -subj "/CN=*.docker.localhost"
@@ -53,19 +53,21 @@ docker compose up -d --pull always
 
 ## Enrutamiento y red
 
-Traefik y `whoami` se conectan a la red Docker local `proxy`. Los servicios definidos en otros proyectos deben conectarse a una red externa llamada `proxy` y usar etiquetas, por ejemplo:
+ Los servicios definidos en otros proyectos deben conectarse a una red externa llamada `proxy` y usar etiquetas, por ejemplo:
 
 ```yaml
-services:
-  app:
-    image: ejemplo/app
-    networks: [proxy]
+# Whoami application
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      - proxy
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.app.rule=Host(`app.docker.localhost`)
-      - traefik.http.routers.app.entrypoints=websecure
-      - traefik.http.routers.app.tls=true
-      - traefik.http.services.app.loadbalancer.server.port=8080
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls=true"
 
 networks:
   proxy:
